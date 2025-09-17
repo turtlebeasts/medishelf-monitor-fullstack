@@ -65,7 +65,7 @@ export default function PostDetails() {
 
       {/* Meta Info */}
       <div className="text-sm text-gray-400">
-        💰 {post.price} | ⏳ {post.expiry_date}
+        ₹ {post.price} | 📅 {post.expiry_date}
         <p className="text-xs mt-1">Posted by {post.author?.username}</p>
       </div>
 

@@ -32,7 +32,7 @@ export default function Feed() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-white">
-            🌍 Public Medicine Feed
+            Public Medicine Feed
           </h1>
         </div>
 
@@ -87,21 +87,8 @@ export default function Feed() {
                 {/* Post Body */}
                 <p className="text-gray-200 mb-2">{post.description}</p>
                 <p className="text-sm text-gray-400">
-                  💰 {post.price} | ⏳ {post.expiry_date}
+                  ₹ {post.price} | 📅 {post.expiry_date}
                 </p>
-
-                {/* Actions (future-ready, like a real feed) */}
-                <div className="flex gap-6 mt-4 text-gray-400 text-sm">
-                  <button className="hover:text-blue-400 transition">
-                    💬 Comment
-                  </button>
-                  <button className="hover:text-pink-400 transition">
-                    ❤️ Like
-                  </button>
-                  <button className="hover:text-green-400 transition">
-                    🔗 Share
-                  </button>
-                </div>
               </motion.div>
             ))
           )}

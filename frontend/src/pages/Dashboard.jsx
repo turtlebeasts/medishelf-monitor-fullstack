@@ -155,7 +155,7 @@ export default function Dashboard() {
               <h2 className="text-xl font-semibold text-white">{post.name}</h2>
               <p className="text-gray-300 mt-2">{post.description}</p>
               <p className="text-sm text-gray-400 mt-2">
-                💰 {post.price} | ⏳ {post.expiry_date}
+                ₹ {post.price} | 📅 {post.expiry_date}
               </p>
               <div className="flex space-x-2 mt-4">
                 <motion.button
@@ -163,14 +163,14 @@ export default function Dashboard() {
                   whileHover={{ scale: 1.05 }}
                   className="px-3 py-1 rounded-lg bg-blue-600/80 text-white text-sm"
                 >
-                  ✏️ Edit
+                  Edit
                 </motion.button>
                 <motion.button
                   onClick={() => handleDelete(post.id)}
                   whileHover={{ scale: 1.05 }}
                   className="px-3 py-1 rounded-lg bg-red-600/80 text-white text-sm"
                 >
-                  🗑 Delete
+                  Delete
                 </motion.button>
               </div>
             </motion.div>

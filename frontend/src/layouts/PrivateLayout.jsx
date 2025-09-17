@@ -12,9 +12,9 @@ export default function PrivateLayout() {
   };
 
   const navLinks = [
-    { path: "/feed", label: "📋 Feed" },
-    { path: "/dashboard", label: "⚡ Dashboard" },
-    { path: "/conversations", label: "💬 Conversations" },
+    { path: "/feed", label: "Feed" },
+    { path: "/dashboard", label: "Dashboard" },
+    { path: "/conversations", label: "Conversations" },
   ];
 
   return (
@@ -27,8 +27,7 @@ export default function PrivateLayout() {
         className="w-64 bg-gradient-to-b from-gray-800 to-gray-900 border-r border-white/10 p-6 flex flex-col"
       >
         {/* Brand */}
-        <div className="flex items-center gap-2 mb-10">
-          <span className="text-2xl">💊</span>
+        <div className="flex items-center gap-2 mb-10 justify-center">
           <h1 className="text-xl font-bold tracking-wide text-blue-400">
             MediShelf
           </h1>

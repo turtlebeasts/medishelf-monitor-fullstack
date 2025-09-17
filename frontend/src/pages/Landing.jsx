@@ -38,7 +38,7 @@ export default function LandingPage() {
         </motion.p>
 
         <motion.div
-          className="mt-8 flex gap-4 flex-wrap justify-center"
+          className="mt-8 flex gap-4 flex-wrap justify-center z-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}

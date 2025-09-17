@@ -21,7 +21,7 @@ export default function ConversationsList() {
 
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-white">💬 Your Conversations</h1>
+      <h1 className="text-2xl font-bold text-white">Your Conversations</h1>
 
       {convos.length === 0 ? (
         <p className="text-gray-400">No conversations yet.</p>
