@@ -24,10 +24,22 @@ export default function PostDetails() {
 
   const handleMessageSeller = async () => {
     try {
-      const res = await API.post("/conversations/", { post: post.id });
+      // ensure your post payload includes author.id
+      const sellerId = post?.author?.id;
+      if (!sellerId) {
+        alert("Missing seller id on post.author.id");
+        return;
+      }
+
+      const res = await API.post("/conversations/", { user: sellerId });
       navigate(`/chat/${res.data.id}`);
     } catch (err) {
-      alert("Error starting conversation");
+      // surface server message if available
+      const msg =
+        err?.response?.data?.user ||
+        err?.response?.data?.detail ||
+        "Error starting conversation";
+      alert(msg);
     }
   };
 

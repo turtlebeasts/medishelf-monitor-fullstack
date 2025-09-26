@@ -1,19 +1,19 @@
-from django.db import models; from django.contrib.auth.models import User
-from medicines.models import MedicinePost
+# conversations/models.py
+from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Conversation(models.Model):
-    post = models.ForeignKey(MedicinePost, on_delete=models.CASCADE, related_name="conversations")
     participants = models.ManyToManyField(User, related_name="conversations")
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Conversation on {self.post.name}"
+        names = ", ".join(self.participants.values_list("username", flat=True))
+        return f"Conversation between {names}"
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name="messages")
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
-    text = models.TextField()
+    text = models.TextField()  # your view uses "content"—either change frontend to send "text", or rename this field.
     timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.sender.username}: {self.text[:20]}"

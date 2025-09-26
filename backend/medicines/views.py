@@ -1,9 +1,10 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from .models import MedicinePost
 from .serializers import MedicinePostSerializer
 from rest_framework.decorators import action
 from rest_framework.response import Response
 import openai, os
+from google import genai
 import requests
 
 class MedicinePostViewSet(viewsets.ModelViewSet):
@@ -24,28 +25,33 @@ class MedicinePostViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
 
-        # 👇 New endpoint: /api/posts/<id>/instructions/
+
     @action(detail=True, methods=["get"], permission_classes=[permissions.IsAuthenticated])
     def instructions(self, request, pk=None):
         post = self.get_object()
-        prompt = f"Provide clear and safe usage instructions for the medicine '{post.name}', just 2 to 3 points is enough. If there's no medicine with that name, then just say that 'that looks like a sample medicine' and write a sample description that looks funny."
+
+        # Non-medical, safety-friendly prompt
+        prompt = (
+            f"Write 2–3 short, high-level, non-medical tips for safely handling a product named "
+            f"“{post.name}”. No dosage/treatment advice. Focus on label reading, storage, expiry checks. "
+            f"If it seems fictional, say it looks like a sample product and add a playful generic note. "
+            f"End with: 'This is general information, not medical advice.'"
+        )
+
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            return Response({"error": "GEMINI_API_KEY not set"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         try:
-            api_key = os.getenv("GEMINI_API_KEY")
-            if not api_key:
-                return Response({"error": "Gemini API key not set"}, status=500)
-
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-            resp = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}]})
-            data = resp.json()
-
-            if "candidates" in data and len(data["candidates"]) > 0:
-                text = data["candidates"][0]["content"]["parts"][0]["text"]
-                return Response({"instructions": text})
-            else:
-                return Response({"error": "No response from Gemini", "raw": data}, status=500)
-
+            client = genai.Client(api_key=api_key)
+            resp = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            text = (resp.text or "").strip()
+            if not text:
+                return Response({"error": "empty_text", "raw": getattr(resp, "to_dict", lambda: {})()}, status=502)
+            return Response({"instructions": text})
         except Exception as e:
-            print("Gemini error:", e)
-            return Response({"error": str(e)}, status=500)
-
+            # Surfaces safety/quota/billing/model errors in one place
+            return Response({"error": "genai_error", "detail": str(e)}, status=502)
